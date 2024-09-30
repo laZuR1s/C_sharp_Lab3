@@ -8,25 +8,46 @@ namespace C_sharp_Lab3
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Введите количество окружностей: ");
-            int countOfCircles = int.Parse(Console.ReadLine());
+
+            int countOfCircles;
+            do
+            {
+                Console.WriteLine("Введите количество окружностей: ");
+
+            } while (!int.TryParse(Console.ReadLine(), out countOfCircles) || countOfCircles < 0);
+
             int countOfCrossing = 0;
 
             double[] xCord = new double[countOfCircles];
             double[] yCord = new double[countOfCircles];
             double[] radius = new double[countOfCircles];
+            bool[] isCrossing = new bool[countOfCircles];
 
             for (int i = 0; i < countOfCircles; i++)
             {
-                Console.WriteLine("\nВведите данные окружности " +i+":\n");
-                Console.WriteLine("Введите координату x: ");
-                xCord[i] = double.Parse(Console.ReadLine());
-                Console.WriteLine("Введите координату y: ");
-                yCord[i] = double.Parse(Console.ReadLine());
-                Console.WriteLine("Введите радиус окружности: ");
-                radius[i] = double.Parse(Console.ReadLine());
+                Console.WriteLine("\n-----------------------------------------");
+                Console.WriteLine("\nВведите данные окружности " + (i + 1) + ":\n");
+                do
+                {
+                    Console.WriteLine("\nВведите координату x: ");
+
+                } while (!double.TryParse(Console.ReadLine(), out xCord[i]));
+
+                do
+                {
+                    Console.WriteLine("\nВведите координату y: ");
+
+                } while (!double.TryParse(Console.ReadLine(), out yCord[i]));
+
+                do
+                {
+                    Console.WriteLine("\nВведите радиус окружности: ");
+
+                } while (!double.TryParse(Console.ReadLine(), out radius[i]) || radius[i] < 0);
+                isCrossing[i] = false;
             }
 
             for (int i = 0; i < countOfCircles; i++)
@@ -36,13 +57,27 @@ namespace C_sharp_Lab3
                     double range = Math.Sqrt((xCord[i] - xCord[j]) * (xCord[i] - xCord[j]) + (yCord[i] - yCord[j]) * (yCord[i] - yCord[j]));
                     if (Math.Abs(radius[i] - radius[j]) <= range && range <= (radius[i] + radius[j]))
                     {
-                        countOfCrossing++;
+                        if (!isCrossing[i] && !isCrossing[j])
+                        {
+                            countOfCrossing += 2;
+                            isCrossing[i] = true;
+                            isCrossing[j] = true;
+                        }
+                        else
+                        {
+                            if (!isCrossing[i] && isCrossing[j]|| isCrossing[i] && !isCrossing[j])
+                            {
+                                countOfCrossing++;
+                                isCrossing[i] = true;
+                                isCrossing[j] = true;
+                            }
+                        }
                     }
                 }
             }
+            Console.WriteLine("\n-----------------------------------------");
 
-            Console.WriteLine("Всего пересекающихся окружностей: "+ countOfCrossing);
-
+            Console.WriteLine("\nВсего пересекающихся окружностей: " + countOfCrossing);
 
         }
     }
